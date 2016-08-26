@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<title>Email extractor</title>
+
+</head>
+<body>
+<div id="fb-root"></div>
+<div class="container" >
+ 
+  
+   <div class="row">
+  
+   <div class="col-md-9"> 
+   <br><br><br><br><br><br><br><br>
+<table width="100%" border="1" cellpadding="0" cellspacing="0">
+
+  <tr>
+    <td align="center" valign="top"  class='menucl' >
+        <FORM name="extractor">
+          <TABLE bgcolor="#CCCCCC" cellpadding=1 cellspacing=0 border=0>
+            <TR>
+              <TD>
+                <TABLE border=0 cellpadding=8 cellspacing=0 bordercolor="#000000" bgcolor="#CCCCCC">
+                  <TR class="titlebarcolor">
+                    <TD valign="TOP" colspan=2 ><h2 align="center"><FONT class="titlefont"><strong>Email
+                            Extractor by Haris Ali Khan</strong></FONT></h2>
+                    </TD>
+                  </TR>
+                  <TR>
+                    <TD valign="TOP" align="CENTER" colspan=2>
+                      <SCRIPT language="JAVASCRIPT">
+var introtext = 'Copy text from any source and paste it into here. Then click extract button. You can select different separator (or enter your own), group a number of emails and sort extracted emails alphabetically.';
+document.write('<TEXTAREA NAME="rawdata" rows=12 cols=50 onFocus="if (this.value == introtext) this.value = \'\';">' + introtext + '</TEXTAREA>');
+            </SCRIPT>
+                    </TD>
+                  </TR>
+                  <TR>
+                    <TD valign="TOP" align="LEFT" colspan=2> Separator:
+                        <SELECT name="sep">
+                          <OPTION value=", ">Comma</OPTION>
+                          <OPTION value="|">Pipe</OPTION>
+                          <OPTION value=" : ">Colon</OPTION>
+                          <OPTION value="new">New Line</OPTION>
+                          <OPTION value="other">Other</OPTION>
+                        </SELECT>
+                        <INPUT type="TEXT" name="othersep" size=3 onBlur="checksep(this.value)">
+&nbsp;&nbsp; Group:
+                    <INPUT type="TEXT" size=3 name="groupby" onBlur="numonly(this.value)">
+                    Emails &nbsp;&nbsp;
+                    <LABEL for="sortbox">
+                    <INPUT type="CHECKBOX" name="sort" id="sortbox">
+                    Sort Alphabetically</LABEL>
+                    </TD>
+                  </TR>
+                  <TR valign="TOP">
+                    <TD align="LEFT">
+                      <INPUT name="BUTTON" type="BUTTON" class="button" onClick="findEmail()" value="Extract">
+                      <INPUT name="RESET" type="RESET" class="button" value="Reset">
+                      <SCRIPT language="JavaScript" type="text/javascript">
+<!--
+if ((navigator.appName=="Microsoft Internet Explorer")&&(parseInt(navigator.appVersion)>=4)) {
+   document.write('<INPUT TYPE="BUTTON" CLASS="button" VALUE="Copy To Clipboard" onClick="copy();">');
+} else {
+   document.write('<INPUT TYPE="BUTTON" CLASS="button" VALUE="Highlight All" onClick="highlight();">');
+}
+// -->
+            </SCRIPT>
+                    </TD>
+                    <TD align="RIGHT" valign="BOTTOM" nowrap> Email count:
+                        <INPUT name="count" size=5 readonly>
+                    </TD>
+                  </TR>
+                </TABLE>
+              </TD>
+            </TR>
+          </TABLE>
+        </FORM>
+        <SCRIPT language="JAVASCRIPT" type="text/javascript">
+
+function copy() {
+highlight();
+textRange = document.extractor.rawdata.createTextRange();
+textRange.execCommand("RemoveFormat");
+textRange.execCommand("Copy");
+window.alert("The content has been copied to your clipboard.");
+}
+
+function highlight(){
+document.extractor.rawdata.focus()
+document.extractor.rawdata.select()
+}
+
+function checksep(value){
+if (value) document.extractor.sep.value = "other";
+}
+
+function numonly(value){
+if (isNaN(value)) {
+    window.alert("Please enter a number or else \nleave blank for no grouping.");
+    document.extractor.groupby.focus();
+}
+}
+
+function findEmail() {
+var email = "No email address detected";
+var a = 0;
+var ingroup = 0;
+var separator = document.extractor.sep.value;
+var groupby = Math.round(document.extractor.groupby.value);
+
+if (separator == "new") separator = "\n";
+if (separator == "other") separator = document.extractor.othersep.value;
+var rawemail = document.extractor.rawdata.value.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi);
+var norepeat = new Array();
+if (rawemail) {
+	for (var i=0; i<rawemail.length; i++) {
+		var repeat = 0;
+		
+		// Check for repeated emails routine
+		for (var j=i+1; j<rawemail.length; j++) {
+			if (rawemail[i] == rawemail[j]) {
+				repeat++;
+			}
+		}
+		
+		// Create new array for non-repeated emails
+		if (repeat == 0) {
+			norepeat[a] = rawemail[i];
+			a++;
+		}
+	}
+	if (document.extractor.sort.checked) norepeat = norepeat.sort(); // Sort the array
+	email = "";
+	// Join emails together with separator
+	for (var k = 0; k < norepeat.length; k++) {
+		if (ingroup != 0) email += separator;
+		email += norepeat[k];
+		ingroup++;
+		
+		if (groupby) {
+		    if (ingroup == groupby) {
+		        email += '\n\n';
+		        ingroup = 0;
+		    }
+		}
+	}
+}
+
+var count = norepeat.length;
+
+document.extractor.count.value = count;
+document.extractor.rawdata.value = email;
+}
+  </SCRIPT>
+    </td>
+  </tr>
+</table>
+ </div>
+
+ </div>
+
+
+</div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> 
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script> 
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-24457393-3']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script> 
+<script language="javascript">                              
+var d=new Date();
+var b=d.getSeconds();
+</script> 
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '594115200714962',
+      xfbml      : true,
+      version    : 'v2.1'
+    });
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+   </script>
+   
+   
+   <script type="text/javascript">
+var infolinks_pid = 2396320;
+var infolinks_wsid = 0;
+</script>
+</body>
+</html>
